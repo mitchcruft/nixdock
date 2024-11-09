@@ -3,7 +3,7 @@ FROM archlinux/archlinux:base-devel
 RUN sed -in 's/.*en_US\(.*\)/en_US\1/' /etc/locale.gen
 RUN ["locale-gen"]
 # TODO Can we avoid having to copy this in?
-COPY ["locale.conf", "/etc/locale.conf"]
+COPY ["docker/locale.conf", "/etc/locale.conf"]
 
 RUN pacman -Suy --noconfirm
 RUN pacman -S --needed --noconfirm bind
@@ -21,8 +21,6 @@ RUN pacman -S --needed --noconfirm zsh
 
 # Set up user
 RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
-#RUN ["useradd", "-m", "-G", "nix-users,wheel", "-s", "/bin/zsh", "m"]
-#RUN ["useradd", "-m", "-G", "nixbld,wheel", "-s", "/bin/zsh", "m"]
 RUN ["useradd", "-m", "-G", "wheel", "-s", "/bin/zsh", "m"]
 USER "m"
 
@@ -52,26 +50,9 @@ WORKDIR /home/m
 RUN mkdir bin
 RUN mkdir src
 
-# TODO: Make this a git clone?
-COPY home-manager .config/home-manager
+COPY --chown=m:m home-manager .config/home-manager
+COPY --chown=m:m docker/home.nix .config/home-manager/
 RUN nix run home-manager/release-24.05 -- switch
-#RUN nixl home-manager
-#RUN home-manager switch
-
-
-# Initialize home-manager
-# TODO: ...
-
-# Clone dotfiles and bootstrap
-#WORKDIR /home/m
-#COPY . /home/m/.dotfiles
-#RUN sudo chown -R m:m /home/m/.dotfiles
-#RUN stow -d .dotfiles -t . base
-#RUN ln -s .dotfiles/.templates/.zshrc .
-#RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git .powerlevel10k 
-#RUN git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm
-#RUN .tmux/plugins/tpm/bin/install_plugins
-#RUN ["nvim", "+Lazy! sync", "+qa"]
 
 # TODO: create the shared volume
 
