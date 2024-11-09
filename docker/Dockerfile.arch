@@ -2,7 +2,6 @@ FROM archlinux/archlinux:base-devel
 
 RUN sed -in 's/.*en_US\(.*\)/en_US\1/' /etc/locale.gen
 RUN ["locale-gen"]
-# TODO Can we avoid having to copy this in?
 COPY ["docker/locale.conf", "/etc/locale.conf"]
 
 RUN pacman -Suy --noconfirm
