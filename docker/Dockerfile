@@ -15,30 +15,48 @@ RUN pacman -S --needed --noconfirm go
 RUN pacman -S --needed --noconfirm man-db
 RUN pacman -S --needed --noconfirm man-pages
 RUN pacman -S --needed --noconfirm neovim
-RUN pacman -S --needed --noconfirm nix
 RUN pacman -S --needed --noconfirm stow
 RUN pacman -S --needed --noconfirm tmux
 RUN pacman -S --needed --noconfirm zsh
 
+# Set up user
 RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
-RUN ["useradd", "-m", "-G", "nix-users,wheel", "-s", "/bin/zsh", "m"]
-
-# Set up nix
-RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-# RUN nix-channel --update
-
+#RUN ["useradd", "-m", "-G", "nix-users,wheel", "-s", "/bin/zsh", "m"]
+#RUN ["useradd", "-m", "-G", "nixbld,wheel", "-s", "/bin/zsh", "m"]
+RUN ["useradd", "-m", "-G", "wheel", "-s", "/bin/zsh", "m"]
 USER "m"
 
 # Install yay
-#WORKDIR /tmp
-#RUN ["git", "clone", "https://aur.archlinux.org/yay.git"]
-#WORKDIR /tmp/yay
-#RUN ["makepkg", "-si", "--noconfirm"]
+WORKDIR /tmp
+RUN ["git", "clone", "https://aur.archlinux.org/yay.git"]
+WORKDIR /tmp/yay
+RUN ["makepkg", "-si", "--noconfirm"]
+
+# Set up nix in single-user installation
+WORKDIR /tmp
+RUN curl --proto '=https' --tlsv1.2 -sSfL https://nixos.org/nix/install -o nix-install.sh
+RUN sh nix-install.sh --no-daemon --yes
+USER "root"
+RUN echo 'PATH=/home/m/.nix-profile/bin:${PATH}' > /etc/profile.d/nix.sh
+RUN mkdir /etc/nix
+RUN echo 'experimental-features = nix-command flakes' > /etc/nix/nix.conf
+USER "m"
+ENV PATH="${PATH}:/home/m/.nix-profile/bin"
+ENV USER=m
+RUN nix-channel --add https://github.com/NixOs/nixpkgs/archive/24.05.tar.gz nixpkgs
+RUN nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz home-manager
+RUN nix-channel --update
 
 # Create home directory
 WORKDIR /home/m
 RUN mkdir bin
 RUN mkdir src
+
+# TODO: Make this a git clone?
+COPY home-manager .config/home-manager
+RUN nix run home-manager/release-24.05 -- switch
+#RUN nixl home-manager
+#RUN home-manager switch
 
 
 # Initialize home-manager
