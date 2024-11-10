@@ -17,7 +17,10 @@
         inherit stateVersion username homeDirectory;
       };
       programs = import ./programs.nix { inherit pkgs; };
-      systemd.user.enable = false;
+      nix = {
+        package = pkgs.nix;
+        extraOptions = "experimental-features = nix-command";
+      };
     };
   };
 }
