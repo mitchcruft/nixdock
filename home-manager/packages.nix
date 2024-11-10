@@ -2,10 +2,11 @@
 
 with pkgs; [
     (nerdfonts.override { fonts = [
-      "FiraCode"
-      "GeistMono"
       "JetBrainsMono"
-      "Noto"
+      # Fonts are super large.  Enable as needed.
+      #"FiraCode"
+      #"GeistMono"
+      #"Noto"
     ]; })
 
     bind
