@@ -2,14 +2,15 @@
 cd $(dirname $0)
 
 IMAGE=chesterfied/localdev
+DISTRO=${1:-arch}
 
 set -ex
 
 docker build \
   . \
   -t ${IMAGE} \
-  -f docker/Dockerfile.arch
+  -f docker/Dockerfile.${DISTRO}
 
 docker run \
-  --hostname arch \
+  --hostname ${DISTRO} \
   -it ${IMAGE}
