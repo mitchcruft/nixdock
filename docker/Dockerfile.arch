@@ -21,7 +21,7 @@ RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
 RUN ["useradd", "-m", "-G", "wheel", "-s", "/bin/zsh", "m"]
 USER "m"
 
-# Install yay
+# Install yay from yay-bin (saves space)
 WORKDIR /tmp
 RUN ["git", "clone", "https://aur.archlinux.org/yay-bin.git"]
 WORKDIR /tmp/yay-bin
