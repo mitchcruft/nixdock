@@ -12,5 +12,5 @@ docker build \
   -f docker/Dockerfile.${DISTRO}
 
 docker run \
-  --hostname ${DISTRO} \
+  --hostname docker-${DISTRO} \
   -it ${IMAGE}
