@@ -9,8 +9,6 @@ RUN pacman -S --needed --noconfirm bind
 RUN pacman -S --needed --noconfirm git
 RUN pacman -S --needed --noconfirm git-delta
 RUN pacman -S --needed --noconfirm github-cli
-# For installing yay
-RUN pacman -S --needed --noconfirm go
 RUN pacman -S --needed --noconfirm man-db
 RUN pacman -S --needed --noconfirm man-pages
 RUN pacman -S --needed --noconfirm neovim
@@ -25,9 +23,11 @@ USER "m"
 
 # Install yay
 WORKDIR /tmp
-RUN ["git", "clone", "https://aur.archlinux.org/yay.git"]
-WORKDIR /tmp/yay
+RUN ["git", "clone", "https://aur.archlinux.org/yay-bin.git"]
+WORKDIR /tmp/yay-bin
 RUN ["makepkg", "-si", "--noconfirm"]
+WORKDIR /tmp
+RUN rm -rf yay-bin
 
 # Set up nix in single-user installation
 WORKDIR /tmp
@@ -44,10 +44,14 @@ WORKDIR /home/m
 RUN mkdir bin
 RUN mkdir src
 
-RUN mkdir .config/home-manager
+# Initialize home-manager
+RUN mkdir -p .config/home-manager
 COPY --chown=m:m docker/home.nix .config/home-manager/home.nix
 COPY --chown=m:m home-manager .config/home-manager/home-manager
 RUN nix --extra-experimental-features nix-command --extra-experimental-features flakes run home-manager/release-24.05 -- switch
+
+# Clean up
+RUN nix-collect-garbage -d
 
 # TODO: create the shared volume
 
