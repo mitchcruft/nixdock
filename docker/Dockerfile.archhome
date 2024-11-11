@@ -1,0 +1,45 @@
+FROM archlinux/archlinux:base
+
+# Generate locale
+RUN sed -in 's/.*en_US\(.*\)/en_US\1/' /etc/locale.gen
+RUN ["locale-gen"]
+COPY ["docker/locale.conf", "/etc/locale.conf"]
+
+# Install base packages
+RUN pacman -Suy --noconfirm
+RUN pacman -S --needed --noconfirm bind
+RUN pacman -S --needed --noconfirm git
+RUN pacman -S --needed --noconfirm git-delta
+RUN pacman -S --needed --noconfirm github-cli
+RUN pacman -S --needed --noconfirm neovim
+RUN pacman -S --needed --noconfirm sudo
+RUN pacman -S --needed --noconfirm tmux
+RUN pacman -S --needed --noconfirm zsh
+
+# Copy home-manager setup and create user
+COPY --from=chesterfied/localhome / /
+RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
+RUN ["useradd", "-m", "-G", "wheel", "-s", "/bin/zsh", "m"]
+RUN chown -R m:m /home/m
+
+# Install yay from yay-bin (saves space)
+RUN pacman -S --needed --noconfirm binutils
+RUN pacman -S --needed --noconfirm debugedit
+RUN pacman -S --needed --noconfirm fakeroot
+RUN pacman -S --needed --noconfirm make
+USER "m"
+WORKDIR /tmp
+RUN ["git", "clone", "https://aur.archlinux.org/yay-bin.git"]
+WORKDIR /tmp/yay-bin
+RUN ["makepkg", "-si", "--noconfirm"]
+WORKDIR /tmp
+RUN rm -rf yay-bin
+USER "root"
+
+# Set up login environment
+USER "m"
+WORKDIR "/home/m"
+ENV TERM=xterm-256color
+ENV SHELL=/bin/zsh
+SHELL ["/bin/zsh", "--login"]
+CMD ["/bin/tmux"]
