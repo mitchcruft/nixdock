@@ -17,4 +17,7 @@ with pkgs; [
     man-pages
     tmux
     zsh
+    # TODO: Only on macos
+    #alt-tab-macos
+    #raycast
 ]

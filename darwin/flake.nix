@@ -34,7 +34,7 @@
     configuration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
-      environment.systemPackages = [ ];
+      environment.systemPackages = [];
 
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
@@ -61,23 +61,36 @@
         configuration
         home-manager.darwinModules.home-manager
         {
-          users.users.m.home = homeDirectory;
+          homebrew = {
+            enable = true;
+            casks = [
+	      # "alt-tab"
+              # "orbstack"
+            ];
+          };
+          users.users.${username} = {
+            name = username;
+            home = homeDirectory;
+            isHidden = false;
+            shell = self.darwinPackages.zsh;
+          };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.m = import ./home.nix {
+          home-manager.users.${username} = import ./home.nix {
             pkgs = self.darwinPackages;
             stateVersion = "24.05";
             inherit username homeDirectory;
           };
         }
-	nix-homebrew.darwinModules.nix-homebrew
+        nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
             # Install Homebrew under the default prefix
             enable = true;
 
-	    # Apple Silicon Only: Also install Homebrew under the default Intel
-	    # prefix for Rosetta 2
+            # Apple Silicon Only: Also install Homebrew under the default Intel
+            # prefix for Rosetta 2
+            # TODO: should be based on x86_64 vs aarch64
             enableRosetta = false;
 
             # User owning the Homebrew prefix
@@ -89,11 +102,11 @@
               "homebrew/homebrew-cask" = homebrew-cask;
             };
 
-	    # Optional: Enable fully-declarative tap management
+            # Optional: Enable fully-declarative tap management
             #
-	    # With mutableTaps disabled, taps can no longer be added
-	    # imperatively with `brew tap`.
-            mutableTaps = false;
+            # With mutableTaps disabled, taps can no longer be added
+            # imperatively with `brew tap`.
+            #mutableTaps = false;
           };
         }
       ];
