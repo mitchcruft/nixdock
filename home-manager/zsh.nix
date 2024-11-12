@@ -13,10 +13,13 @@
     {
       name = "powerlevel10k";
       src = pkgs.zsh-powerlevel10k;
-      file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
     }
   ];
+  initExtraFirst = ''
+    source ${pkgs.concatText "p10k-prelude.zsh" [ ./config/p10k-prelude.zsh ]}
+  '';
   initExtra = ''
     source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-  '' + (builtins.readFile ./config/p10k.zsh);
+    source ${pkgs.concatText "p10k.zsh" [ ./config/p10k.zsh ]}
+  '';
 }
