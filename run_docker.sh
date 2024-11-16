@@ -1,8 +1,8 @@
 #!/bin/bash
 cd $(dirname $0)
 
-HOME_IMAGE=chesterfied/localhome
-IMAGE=chesterfied/localdev
+HOME_IMAGE=mitchcrufy/home-manager-out
+IMAGE=mitchcrufy/archhome
 
 set -ex
 
