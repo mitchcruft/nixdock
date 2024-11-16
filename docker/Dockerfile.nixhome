@@ -17,8 +17,8 @@ ENV USER=m
 ENV HOME=/home/m
 WORKDIR /home/m
 RUN mkdir -p .config/home-manager
+COPY home.nix .config/home-manager/home.nix
 COPY home-manager .config/home-manager/home-manager
-COPY docker/home.nix .config/home-manager/home.nix
 RUN nix run home-manager/release-24.05 -- build
 RUN nix run home-manager/release-24.05 -- switch
 
