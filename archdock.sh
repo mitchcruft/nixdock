@@ -20,7 +20,7 @@ function fail {
 }
 
 function usage {
-  echo "usage: $0 [do|run|build|push|pull|help]" >&2
+  echo "usage: $0 [do|run|build|buildrun|push|pull|help]" >&2
 }
 
 CMD=$1
@@ -37,6 +37,11 @@ case "$CMD" in
   build)
     BUILD_HOME=true
     BUILD_OS=true
+    ;;
+  buildrun)
+    BUILD_HOME=true
+    BUILD_OS=true
+    RUN_OS=true
     ;;
   push)
     BUILD_HOME=true
@@ -57,6 +62,8 @@ case "$CMD" in
     exit 1
     ;;
 esac
+
+set -ex
 
 if ${BUILD_HOME}; then
   docker build \
