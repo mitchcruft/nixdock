@@ -12,10 +12,16 @@ wsl --unregister Arch
 if NOT EXIST ".\Arch.exe" set download=T
 if "%1"=="-d" set download=T
 if "%download%"=="T" (
+  if EXIST "Arch" (
+    rmdir /s /q "Arch"
+  )
+  mkdir "Arch"
+  cd "Arch"
   curl -Lo "Arch.zip" "https://github.com/yuk7/ArchWSL/releases/download/24.4.28.0/Arch.zip"
   tar -xf "Arch.zip"
+  cd ..
 )
-echo | .\Arch.exe
+echo | .\Arch\Arch.exe
 
 :: Set Arch as default
 wsl -s Arch
