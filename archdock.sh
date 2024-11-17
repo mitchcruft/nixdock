@@ -5,14 +5,14 @@ cd $(dirname $0)
 HOME_IMAGE=mitchcrufy/home-manager-out
 OS_IMAGE=mitchcrufy/archdock
 
-BUILD_HOME=false
-PUSH_HOME=false
-PULL_HOME=false
-RUN_HOME=false
-BUILD_OS=false
-PUSH_OS=false
-PULL_OS=false
-RUN_OS=false
+BUILD_HOME=${BUILD_HOME:-false}
+PUSH_HOME=${PUSH_HOME:-false}
+PULL_HOME=${PULL_HOME:-false}
+RUN_HOME=${RUN_HOME:-false}
+BUILD_OS=${BUILD_OS:-false}
+PUSH_OS=${PUSH_OS:-false}
+PULL_OS=${PULL_OS:-false}
+RUN_OS=${RUN_OS:-false}
 
 function fail {
   echo "$@" >&2
@@ -20,7 +20,7 @@ function fail {
 }
 
 function usage {
-  echo "usage: $0 [run|build|push|pull|help]" >&2
+  echo "usage: $0 [do|run|build|push|pull|help]" >&2
 }
 
 CMD=$1
@@ -29,6 +29,8 @@ if [ "$#" -eq 0 ]; then
 fi
 
 case "$CMD" in
+  do)
+    ;;
   run)
     RUN_OS=true
     ;;
