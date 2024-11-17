@@ -2,10 +2,10 @@
   description = "nix-darwin system flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
@@ -52,11 +52,13 @@
       system.stateVersion = 5;
 
       # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "x86_64-darwin";
+      #nixpkgs.hostPlatform = "x86_64-darwin";
+      nixpkgs.hostPlatform = "aarch64-darwin";
     };
   in
   {
     darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
+
       modules = [
         configuration
         home-manager.darwinModules.home-manager
@@ -64,8 +66,8 @@
           homebrew = {
             enable = true;
             casks = [
-	      # "alt-tab"
-              # "orbstack"
+             # "alt-tab"
+             # "orbstack"
             ];
           };
           users.users.${username} = {
@@ -88,9 +90,9 @@
             # Install Homebrew under the default prefix
             enable = true;
 
-            # Apple Silicon Only: Also install Homebrew under the default Intel
-            # prefix for Rosetta 2
-            # TODO: should be based on x86_64 vs aarch64
+            # Apple Silicon Only: Also install Homebrew under the default
+            # Intel prefix for Rosetta 2 TODO: should be based on x86_64 vs
+            # aarch64
             enableRosetta = false;
 
             # User owning the Homebrew prefix
@@ -106,7 +108,7 @@
             #
             # With mutableTaps disabled, taps can no longer be added
             # imperatively with `brew tap`.
-            #mutableTaps = false;
+            mutableTaps = false;
           };
         }
       ];
