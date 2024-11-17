@@ -1,17 +1,22 @@
 FROM nixos/nix AS home-manager
 
+# Allow ourselves to call nix without warnings
 RUN echo 'experimental-features = nix-command flakes' > /etc/nix/nix.conf
 
+# Update nix-channel with home-manager
 RUN nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz home-manager
 RUN nix-channel --update
-RUN nix-env --install gnused
 
+# Create user m
 RUN echo "m:x:1:1:x:/home/m:/bin/bash" >> /etc/passwd
 RUN echo "m:x:1:m" >> /etc/group
+RUN nix-env --install gnused
 RUN sed -i -e 's/^\(nixbld.*\)/\1,m/' /etc/group
 
-RUN chown -R m:m /nix
+# Allow m to write to /nix/var
+RUN chown -R m:m /nix/var
 
+# Initialize home directory
 USER m
 ENV USER=m
 ENV HOME=/home/m
@@ -22,9 +27,7 @@ COPY home-manager .config/home-manager/home-manager
 RUN nix run home-manager/release-24.05 -- build
 RUN nix run home-manager/release-24.05 -- switch
 
-COPY --chmod=777 docker/mkstore.sh /tmp/mkstore.sh
-RUN /tmp/mkstore.sh /tmp/store
-
+# Copy home directory to /tmp/m
 RUN mkdir /tmp/m
 RUN cp -aLr .config /tmp/m
 RUN cp -aLr .zsh /tmp/m
@@ -33,16 +36,11 @@ RUN cp -aLr .zshrc /tmp/m
 RUN mkdir /tmp/m/.nix-profile
 RUN cp -aLr .nix-profile/etc /tmp/m/.nix-profile
 
+# Copy needed /nix files to /tmp/store
+COPY --chmod=777 docker/mkstore.sh /tmp/mkstore.sh
+RUN /tmp/mkstore.sh /tmp/store
+
+# Create a clean home directory and store
 FROM scratch
 COPY --from=home-manager /tmp/m /home/m
 COPY --from=home-manager /tmp/store /nix/store
-
-# WORKDIR /home
-# RUN mv m /tmp/m.bak
-# RUN mv /tmp/m m
-# WORKDIR /home/m
-# 
-# USER root
-# RUN rm -rf /tmp
-# RUN rm /nix/var/nix/gcroots/auto/*
-# RUN nix-collect-garbage -d
