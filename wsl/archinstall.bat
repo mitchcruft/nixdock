@@ -1,21 +1,25 @@
-cd $env:TEMP
+cd %TEMP%
+if NOT EXIST "ArchInstall" (
+  mkdir ArchInstall
+)
+cd ArchInstall
 
 :: Remove old Arch installation
 wsl --terminate Arch
 wsl --unregister Arch
 
 :: Install WSL from https://github.com/yuk7/ArchWSL
-if (-Not (Test-Path ".\Arch\Arch.exe")) {
-  Invoke-WebRequest -Uri "https://github.com/yuk7/ArchWSL/releases/download/24.4.28.0/Arch.zip" -OutFile "Arch.zip"
-  Expand-Archive -Path "Arch.zip" -DestinationPath "Arch"
-}
-.\Arch\Arch.exe
+if NOT EXIST ".\Arch.exe" set download=T
+if "%1"=="-d" set download=T
+if "%download%"=="T" (
+  curl -Lo "Arch.zip" "https://github.com/yuk7/ArchWSL/releases/download/24.4.28.0/Arch.zip"
+  tar -xf "Arch.zip"
+)
+echo | .\Arch.exe
 
 :: Set Arch as default
 wsl -s Arch
 
-:: Download Arch post-installation script
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/mitchcruft/nixdock/refs/heads/main/wsl/install.sh" -OutFile "\\wsl$\Arch\tmp\install.sh"
-
-:: Login and execute
+:: Download and run post-installation script
+wsl -d Arch curl -Lo "/tmp/install.sh" "https://raw.githubusercontent.com/mitchcruft/nixdock/refs/heads/main/wsl/install.sh"
 wsl -d Arch sh /tmp/install.sh
