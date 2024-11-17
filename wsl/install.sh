@@ -8,11 +8,11 @@ pacman-key --populate
 pacman --noconfirm -Sy archlinux-keyring
 pacman --noconfirm -Su
 
-# Install git
-pacman --noconfirm -S git
-
-# Install zsh
-pacman --noconfirm -S zsh
+# Install needed base packages
+pacman --noconfirm -S \
+	base-devel \
+	git \
+	zsh
 
 # Install nix
 sh <(curl -L https://nixos.org/nix/install) --daemon --yes
@@ -41,7 +41,6 @@ PATH="/nix/var/nix/profiles/default/bin:${PATH}" nix --extra-experimental-featur
 '
 
 # Install yay
-pacman --noconfirm -S base-devel fakeroot
 sudo -u m sh -c '
 cd /tmp
 git clone https://aur.archlinux.org/yay-bin.git
