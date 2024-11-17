@@ -16,10 +16,20 @@
     }
   ];
   initExtraFirst = ''
-    source ${pkgs.concatText "p10k-prelude.zsh" [ ./config/p10k-prelude.zsh ]}
+source ${pkgs.concatText "p10k-prelude.zsh" [ ./config/p10k-prelude.zsh ]}
+
+# Increment NIX_SHELL_DEPTH each time you enter nix-shell
+if [ -n "$IN_NIX_SHELL" ]; then
+    export NIX_SHELL_DEPTH=$(( ''${NIX_SHELL_DEPTH:-0} + 1 ))
+fi
+
+# Add depth to the prompt
+if [ -n "$NIX_SHELL_DEPTH" ]; then
+    PS1="[nix-shell depth $NIX_SHELL_DEPTH] $PS1"
+fi
   '';
   initExtra = ''
-    source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-    source ${pkgs.concatText "p10k.zsh" [ ./config/p10k.zsh ]}
+source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+source ${pkgs.concatText "p10k.zsh" [ ./config/p10k.zsh ]}
   '';
 }
