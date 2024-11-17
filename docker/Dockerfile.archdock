@@ -42,4 +42,4 @@ WORKDIR "/home/m"
 ENV TERM=xterm-256color
 ENV SHELL=/bin/zsh
 SHELL ["/bin/zsh", "--login"]
-CMD ["/bin/tmux"]
+CMD ["/bin/zsh"]
