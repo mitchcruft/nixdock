@@ -30,7 +30,7 @@ hostname = "batcave"
 
 [user]
 default = "m"
-' > /etc/wsl.conf
+' >> /etc/wsl.conf
 
 # Install home-manager
 sudo -u m sh -c '
