@@ -20,7 +20,9 @@ RUN apt install -y git-delta
 
 # Copy home-manager setup and create user
 COPY --from=mitchcrufy/home-manager-out / /
-RUN ["useradd", "-m", "-s", "/bin/zsh", "m"]
+RUN groupadd wheel
+RUN echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
+RUN ["useradd", "-m", "-G", "wheel", "-s", "/bin/zsh", "m"]
 RUN chown -R m:m /home/m
 
 # Set up login environment
