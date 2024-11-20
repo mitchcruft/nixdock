@@ -1,0 +1,32 @@
+FROM ubuntu:latest
+
+# Generate locale
+RUN apt update && apt install -y locales && rm -rf /var/lib/apt/lists/* \
+	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG=en_US.utf8
+
+# Install base packages
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt -q --no-allow-insecure-repositories update
+RUN apt install -y ubuntu-minimal
+RUN apt install -y build-essential
+RUN apt install -y git
+RUN apt install -y fakeroot
+RUN apt install -y gh
+RUN apt install -y neovim
+RUN apt install -y tmux
+RUN apt install -y zsh
+RUN apt install -y git-delta
+
+# Copy home-manager setup and create user
+COPY --from=mitchcrufy/home-manager-out / /
+RUN ["useradd", "-m", "-s", "/bin/zsh", "m"]
+RUN chown -R m:m /home/m
+
+# Set up login environment
+USER "m"
+WORKDIR "/home/m"
+ENV TERM=xterm-256color
+ENV SHELL=/bin/zsh
+SHELL ["/bin/zsh", "--login"]
+CMD ["/bin/zsh"]
