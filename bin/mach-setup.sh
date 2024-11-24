@@ -101,6 +101,9 @@ elif ${ARCH}; then
 
 fi
 
+# Create a wheel group if one doesn't already exist
+getent group wheel || groupadd wheel
+
 # Install nix
 sh <(curl -L https://nixos.org/nix/install) --daemon --yes
 
