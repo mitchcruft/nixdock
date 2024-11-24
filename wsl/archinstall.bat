@@ -29,3 +29,7 @@ wsl -s Arch
 :: Download and run post-installation script
 wsl -d Arch curl -Lo "/tmp/install.sh" "https://raw.githubusercontent.com/mitchcruft/nixdock/refs/heads/main/wsl/install.sh"
 wsl -d Arch sh /tmp/install.sh
+
+# Reset wsl to force settings update
+wsl -t Arch
+wsl -d Arch
