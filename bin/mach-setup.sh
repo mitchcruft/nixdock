@@ -74,9 +74,6 @@ if [ ${DISTROS} -gt 1 ]; then
   fail "Multiple distros specied!"
 fi
 
-exit 0
-
-
 if ${UBUNTU}; then
 
   # Update system
