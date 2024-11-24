@@ -49,6 +49,3 @@ makepkg -si --noconfirm
 cd /tmp
 rm -rf yay-bin
 '
-
-# Login as m
-exec su m
