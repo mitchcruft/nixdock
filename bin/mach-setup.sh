@@ -77,11 +77,11 @@ fi
 if ${UBUNTU}; then
 
   # Update system
-  sudo apt update -y
-  sudo apt upgrade -y
+  apt update -y
+  apt upgrade -y
 
   # Install needed base packages
-  sudo apt install -y \
+  apt install -y \
     git \
     zsh
 
