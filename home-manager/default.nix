@@ -19,7 +19,7 @@
       programs = import ./programs.nix { inherit pkgs; };
       nix = {
         package = pkgs.lib.mkForce pkgs.nix;
-        extraOptions = "experimental-features = nix-command";
+        extraOptions = "experimental-features = nix-command flakes";
       };
     };
   };
