@@ -81,12 +81,10 @@
             isHidden = false;
             shell = self.darwinPackages.zsh;
           };
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${username} = import ./darwin/home.nix {
-            pkgs = self.darwinPackages;
-            inherit stateVersion username homeDirectory;
-          };
+	  home-manager = (import ./home-manager/default.nix {
+	    pkgs = self.darwinPackages;
+	    inherit stateVersion username homeDirectory;
+	  }).home-manager;
         }
         nix-homebrew.darwinModules.nix-homebrew
         {
