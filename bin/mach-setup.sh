@@ -9,6 +9,7 @@ function fail {
 
 function usage {
   echo "usage: $0 [--wsl] -h|--hostname hostname -u|--user user --arch|--ubuntu" >&2
+  exit 1
 }
 
 ARCH=false

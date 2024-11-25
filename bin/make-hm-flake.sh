@@ -1,4 +1,91 @@
+#!/bin/bash
 
+set -ex
+
+function fail {
+  echo "$@" >&2
+  exit 1
+}
+
+function usage {
+  echo "usage: $0" >&2
+  exit 1
+}
+
+[ "${USER}" ] || USER="$(whoami)"
+[ "${USER}" ] || fail 'Cannot identify \${USER}'
+
+[ "${HOME}" ] || HOME="/home/${USER}"
+[ "${HOME}" ] || fail 'Cannot identify \${HOME}'
+
+[ "${HOSTNAME}" ] || HOSTNAME="$(hostname)"
+[ "${HOSTNAME}" ] || fail 'Cannot identify \${HOSTNAME}'
+
+OS=
+
+if [ -f /etc/os-release ]; then
+  . /etc/os-release
+  case "$ID" in
+    ubuntu)
+      OS="ubuntu"
+      ;;
+    arch|archarm)
+      OS="arch"
+      ;;
+    nixos)
+      OS="nixos"
+      ;;
+  esac
+fi
+
+if [ -z "$OS" ]; then
+  if type uname >/dev/null 2>&1; then
+    case "$(uname)" in
+      Darwin)
+        OS="darwin"
+        ;;
+    esac
+  fi
+fi
+
+function generate_standalone {
+echo '
+{
+  description = "Home manager configuration";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+  };
+
+  outputs = inputs@{ nixpkgs, home-manager, ... }:
+  let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+    stateVersion = "24.05";
+    username = "'${USER}'";
+    homeDirectory = "'${HOME}'";
+  in
+  {
+    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [
+        ./home.nix
+      ];
+    };
+  };
+
+}
+'
+}
+
+function generate_nix_darwin {
+echo '
 {
   description = "nix-darwin system flake";
 
@@ -34,9 +121,9 @@
     system = "aarch64-darwin";
     pkgs = nixpkgs.legacyPackages.${system};
     stateVersion = "24.05";
-    username = "m";
-    homeDirectory = "/Users/m";
-    hostname = "janeair";
+    username = "'${USER}'";
+    homeDirectory = "'${HOME}'";
+    hostname = "'${HOSTNAME}'";
     darwinConfiguration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
@@ -122,4 +209,20 @@
     darwinPackages = self.darwinConfigurations.${hostname}.pkgs;
   };
 }
+'
+}
 
+case "$OS" in
+  ubuntu|arch)
+    generate_standalone
+    ;;
+  darwin)
+    generate_nix_darwin
+    ;;
+  nixos)
+    fail "NixOS unsupported!"
+    ;;
+  *)
+    fail "OS unsupported!"
+    ;;
+esac

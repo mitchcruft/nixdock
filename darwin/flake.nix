@@ -91,8 +91,8 @@
             enable = true;
 
             # Apple Silicon Only: Also install Homebrew under the default
-            # Intel prefix for Rosetta 2 TODO: should be based on x86_64 vs
-            # aarch64
+            # Intel prefix for Rosetta 2
+            # TODO: should be based on x86_64 vs aarch64
             enableRosetta = false;
 
             # User owning the Homebrew prefix
