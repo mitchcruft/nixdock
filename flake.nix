@@ -1,4 +1,3 @@
-
 {
   description = "Home manager configuration";
 
@@ -14,12 +13,10 @@
 
   outputs = inputs@{ nixpkgs, home-manager, ... }:
   let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-    stateVersion = "24.05";
-    username = "m";
-    homeDirectory = "/home/m";
-  in
+    hostConfigFile = ./.hostconfig.nix;
+    hostConfig = import hostConfigFile;
+    pkgs = nixpkgs.legacyPackages.${hostConfig.system};
+  in with hostConfig;
   {
     homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
