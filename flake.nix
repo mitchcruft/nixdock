@@ -17,7 +17,8 @@
     pkgs = nixpkgs.legacyPackages.${hostConfig.system};
   in with hostConfig;
   {
-    homeConfigurations = {
+
+    homeConfigurations = if hostConfig.isStandalone then {
       ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
@@ -30,6 +31,7 @@
           })
         ];
       };
-    };
+    } else {};
+
   };
 }
