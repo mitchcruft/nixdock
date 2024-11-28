@@ -1,26 +1,29 @@
-{ pkgs
-, stateVersion
-, username
-, homeDirectory
-}:
+{ config, pkgs, lib, ...}:
+
+let
+  cfg = config.homeManager;
+in
+
+with lib;
 
 {
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.${username} = { pkgs, ... }: {
-      home = {
-        inherit (pkgs);
-        packages = import ./packages.nix { inherit pkgs; };
-        sessionVariables = import ./env.nix { inherit pkgs username; };
-        shellAliases = import ./aliases.nix;
-        inherit stateVersion username homeDirectory;
-      };
-      programs = import ./programs.nix { inherit pkgs; };
-      nix = {
-        package = pkgs.lib.mkForce pkgs.nix;
-        extraOptions = "experimental-features = nix-command flakes";
-      };
+  imports = [ ./options.nix ];
+
+  home = {
+    inherit (pkgs);
+    packages = import ./packages.nix { inherit pkgs; };
+    sessionVariables = import ./env.nix {
+      pkgs = pkgs;
+      username = cfg.username;
     };
+    shellAliases = import ./aliases.nix;
+    username = cfg.username;
+    homeDirectory = cfg.homeDirectory;
+    stateVersion = cfg.stateVersion;
+  };
+  programs = import ./programs.nix { inherit pkgs; };
+  nix = {
+    package = pkgs.lib.mkForce pkgs.nix;
+    extraOptions = "experimental-features = nix-command flakes";
   };
 }

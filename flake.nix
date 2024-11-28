@@ -8,7 +8,6 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }:
@@ -18,13 +17,19 @@
     pkgs = nixpkgs.legacyPackages.${hostConfig.system};
   in with hostConfig;
   {
-    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [
-        ./home.nix
-      ];
+    homeConfigurations = {
+      ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home-manager/default.nix
+  	({ config, ... }: {
+  	  config.homeManager.enable = true;
+  	  config.homeManager.username = hostConfig.username;
+  	  config.homeManager.homeDirectory = hostConfig.homeDirectory;
+  	  config.homeManager.stateVersion = hostConfig.stateVersion;
+          })
+        ];
+      };
     };
   };
-
 }
-
