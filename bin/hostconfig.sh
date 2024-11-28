@@ -8,7 +8,7 @@ function fail {
 }
 
 function usage {
-  echo "usage: $0" >&2
+  echo "usage: $0 [distro]" >&2
   exit 1
 }
 
@@ -21,30 +21,36 @@ function usage {
 [ "${HOSTNAME}" ] || HOSTNAME="$(hostname)"
 [ "${HOSTNAME}" ] || fail 'Cannot identify \${HOSTNAME}'
 
-OS=
+OS=$1
 SYSTEM="x86_64-linux"
 STANDALONE=false
 DARWIN=false
 WSL=false
 
-if [ -f /etc/os-release ]; then
-  . /etc/os-release
-  case "$ID" in
-    ubuntu)
-      OS="ubuntu"
-      ;;
-    arch|archarm)
-      OS="arch"
-      ;;
-    nixos)
-      OS="nixos"
-      ;;
-  esac
+if [ -z "$OS" ]; then
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    case "$ID" in
+      
+      ubuntu)
+        OS="ubuntu"
+        ;;
+      arch|archarm)
+        OS="arch"
+        ;;
+      nixos)
+        OS="nixos"
+        ;;
+    esac
+  fi
 fi
 
 if [ -z "$OS" ]; then
   if type uname >/dev/null 2>&1; then
     case "$(uname)" in
+      Linux)
+        OS="linux"
+	;;
       Darwin)
         OS="darwin"
         ;;
@@ -53,7 +59,7 @@ if [ -z "$OS" ]; then
 fi
 
 case "$OS" in
-  ubuntu|arch)
+  linux|ubuntu|arch)
     STANDALONE=true
     ;;
   darwin)
