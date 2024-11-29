@@ -22,43 +22,55 @@ function usage {
 [ "${HOSTNAME}" ] || fail 'Cannot identify \${HOSTNAME}'
 
 OS=$1
-SYSTEM="x86_64-linux"
+OSTYPE=
+ARCH=
 STANDALONE=false
 DARWIN=false
 WSL=false
+
+if [ -f "/etc/wsl.conf" ]; then
+  WSL=true
+fi
 
 if [ -z "$OS" ]; then
   if [ -f /etc/os-release ]; then
     . /etc/os-release
     case "$ID" in
-      
       ubuntu)
         OS="ubuntu"
+        OSTYPE="linux"
         ;;
       arch|archarm)
         OS="arch"
+        OSTYPE="linux"
         ;;
       nixos)
         OS="nixos"
+        OSTYPE="linux"
         ;;
     esac
   fi
 fi
 
-if [ -z "$OS" ]; then
-  if type uname >/dev/null 2>&1; then
-    case "$(uname)" in
+if type uname >/dev/null 2>&1; then
+
+  ARCH="$(uname -m)"
+  if [ -z "$OS" ]; then
+    case "$(uname -s)" in
       Linux)
         OS="linux"
-	;;
+        OSTYPE="linux"
+        ;;
       Darwin)
         OS="darwin"
+        OSTYPE="darwin"
         ;;
     esac
   fi
+
 fi
 
-case "$OS" in
+case "${OS}" in
   linux|ubuntu|arch)
     STANDALONE=true
     ;;
@@ -69,13 +81,28 @@ case "$OS" in
     fail "NixOS unsupported!"
     ;;
   *)
-    fail "OS unsupported!"
+    fail "OS \"${OS}\" unsupported!"
     ;;
 esac
 
-if [ -f "/etc/wsl.conf" ]; then
-  WSL=true
-fi
+case "${OSTYPE}" in
+  linux|darwin)
+    ;;
+  *)
+    fail "OSTYPE \"${OSTYPE}\" unsupported!"
+esac
+
+case "${ARCH}" in
+  x86_64)
+    ;;
+  arm64)
+    ARCH="aarch64"
+    ;;
+  *)
+    fail "ARCH \"${ARCH}\" unsupported!"
+esac
+
+SYSTEM="${ARCH}-${OSTYPE}"
 
 function generate {
 echo "{
