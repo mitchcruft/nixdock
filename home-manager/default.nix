@@ -18,7 +18,10 @@ with lib;
       isStandalone = cfg.isStandalone;
       isDarwin = cfg.isDarwin;
     };
-    shellAliases = import ./aliases.nix;
+    shellAliases = import ./aliases.nix {
+      isStandalone = cfg.isStandalone;
+      isDarwin = cfg.isDarwin;
+    };
     username = cfg.username;
     homeDirectory = cfg.homeDirectory;
     stateVersion = cfg.stateVersion;
