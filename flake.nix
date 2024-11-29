@@ -33,22 +33,24 @@
     hostConfigFile = ./.hostconfig.nix;
     hostConfig = import hostConfigFile;
     pkgs = nixpkgs.legacyPackages.${hostConfig.system};
-    homeManagerConfig = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [
-        ./home-manager/default.nix
-        ({ config, ... }: {
-          config.homeManager = with hostConfig; {
-	    enable = true;
-	    inherit
-	      isStandalone
-	      isDarwin
-	      username
-	      homeDirectory
-	      stateVersion;
-          };
-        })
-      ];
+    homeManagerConfig = {
+      ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home-manager/default.nix
+          ({ config, ... }: {
+            config.homeManager = with hostConfig; {
+            enable = true;
+            inherit
+              isStandalone
+              isDarwin
+              username
+              homeDirectory
+              stateVersion;
+            };
+          })
+        ];
+      };
     };
   in with hostConfig;
   {
