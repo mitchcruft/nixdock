@@ -14,15 +14,18 @@ with lib;
     packages = import ./packages.nix { inherit pkgs; };
     sessionVariables = import ./env.nix {
       pkgs = pkgs;
-      configRoot = cfg.configRoot;
       username = cfg.username;
+      isStandalone = cfg.isStandalone;
+      isDarwin = cfg.isDarwin;
     };
     shellAliases = import ./aliases.nix;
     username = cfg.username;
     homeDirectory = cfg.homeDirectory;
     stateVersion = cfg.stateVersion;
   };
+
   programs = import ./programs.nix { inherit pkgs; };
+
   nix = {
     package = pkgs.lib.mkForce pkgs.nix;
     extraOptions = "experimental-features = nix-command flakes";

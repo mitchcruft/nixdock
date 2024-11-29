@@ -15,10 +15,18 @@ with lib;
         Whether to enable home-manager (standalone)
       '';
     };
-    homeManager.configRoot = mkOption {
-      type = with types; uniq str;
+    homeManager.isStandalone = mkOption {
+      default = false;
+      type = with types; bool;
       description = ''
-        Root configuration directory for home-manager
+        Whether home-manager is running in standalone
+      '';
+    };
+    homeManager.isDarwin  = mkOption {
+      default = false;
+      type = with types; bool;
+      description = ''
+        Whether home-manager is running under nix-darwin
       '';
     };
     homeManager.username = mkOption {
