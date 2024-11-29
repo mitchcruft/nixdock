@@ -113,6 +113,7 @@ echo "{
   stateVersion = \"24.05\";
   username = \"${USER}\";
   homeDirectory = \"${HOME}\";
+  hostname = \"${HOSTNAME}\";
 }"
 }
 
