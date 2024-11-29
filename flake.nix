@@ -55,8 +55,7 @@
   in with hostConfig;
   {
 
-    #homeConfigurations = if isStandalone then homeManagerConfig else null;
-    homeConfigurations = homeManagerConfig;
+    homeConfigurations = if isStandalone then homeManagerConfig else null;
 
     darwinConfigurations = if isDarwin then {
       ${hostname} = nix-darwin.lib.darwinSystem {
@@ -99,7 +98,7 @@
               isHidden = false;
               shell = self.darwinPackages.zsh;
             };
-            #home-manager.users.${username} = homeManagerConfig;
+            home-manager.users = homeManagerConfig;
           }
           nix-homebrew.darwinModules.nix-homebrew
           {
