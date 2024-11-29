@@ -2,13 +2,18 @@
 
 cd $(dirname $0)
 
-HOME_IMAGE=mitchcrufy/home-manager-out
-OS_IMAGE=mitchcrufy/ubuntudock
+DISTRO=${DISTRO:-arch}
 
+HOME_IMAGE="mitchcrufy/home-manager-out"
+OS_IMAGE="mitchcrufy/${DISTRO}dock"
+HOSTNAME="docker-${DISTRO}"
+
+DOCKERFILE_HOME="docker/Dockerfile.nixhome"
 BUILD_HOME=${BUILD_HOME:-false}
 PUSH_HOME=${PUSH_HOME:-false}
 PULL_HOME=${PULL_HOME:-false}
 RUN_HOME=${RUN_HOME:-false}
+DOCKERFILE_OS="docker/Dockerfile.${DISTRO}dock"
 BUILD_OS=${BUILD_OS:-false}
 PUSH_OS=${PUSH_OS:-false}
 PULL_OS=${PULL_OS:-false}
@@ -69,7 +74,7 @@ if ${BUILD_HOME}; then
   docker build \
     . \
     -t ${HOME_IMAGE} \
-    -f docker/Dockerfile.nixhome
+    -f 
 fi
 
 if ${PUSH_HOME}; then
@@ -83,7 +88,7 @@ fi
 if ${RUN_HOME}; then
   docker run \
     --rm \
-    --hostname docker-ubuntu \
+    --hostname ${HOSTNAME} \
     -it ${HOME_IMAGE}
 fi
 
@@ -91,7 +96,7 @@ if ${BUILD_OS}; then
   docker build \
     . \
     -t ${OS_IMAGE} \
-    -f docker/Dockerfile.ubuntudock
+    -f ${DOCKERFILE_OS}
 fi
 
 if ${PUSH_OS}; then
@@ -105,6 +110,6 @@ fi
 if ${RUN_OS}; then
   docker run \
     --rm \
-    --hostname docker-ubuntu \
+    --hostname ${HOSTNAME} \
     -it ${OS_IMAGE}
 fi

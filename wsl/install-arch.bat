@@ -27,8 +27,8 @@ echo | .\Arch\Arch.exe
 wsl -s Arch
 
 :: Download and run post-installation script
-wsl -d Arch curl -Lo "/tmp/mach-setup.sh" "https://raw.githubusercontent.com/mitchcruft/nixdock/refs/heads/main/bin/mach-setup.sh"
-wsl -d Arch sh /tmp/mach-setup.sh
+wsl -d Arch curl -Lo "/tmp/setup-standalone-root.sh" "https://raw.githubusercontent.com/mitchcruft/nixdock/refs/heads/main/bin/setup-standalone-root.sh"
+wsl -d Arch sh /tmp/setup-standalone-root.sh
 
 # Reset wsl to force settings update
 wsl -t Arch
