@@ -1,10 +1,9 @@
-{ pkgs, username }:
+{ pkgs, username, configRoot }:
 
 let
-  # TODO: Determine which to use based on the installation?
   singleNixProfile = "$HOME/.nix-profile/bin";
   multiNixProfile = "/etc/profiles/per-user/${username}/bin";
-  homeManagerBin = "$HOME/.config/home-manager/bin";
+  homeManagerBin = configRoot + "/bin";
   swBin = "/run/current-system/sw/bin";
   userBin = "$HOME/bin";
 in

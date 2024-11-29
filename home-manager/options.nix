@@ -15,6 +15,12 @@ with lib;
         Whether to enable home-manager (standalone)
       '';
     };
+    homeManager.configRoot = mkOption {
+      type = with types; uniq str;
+      description = ''
+        Root configuration directory for home-manager
+      '';
+    };
     homeManager.username = mkOption {
       type = with types; uniq str;
       description = ''

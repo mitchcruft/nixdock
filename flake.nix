@@ -25,6 +25,12 @@
           ./home-manager/default.nix
   	({ config, ... }: {
   	  config.homeManager.enable = true;
+	  config.homeManager.configRoot = if hostConfig.isStandalone then
+	    "$HOME/.config/home-manager/bin"
+	  else if hostConfig.isDarwin then
+	    "$HOME/.config/nix-darwin/bin"
+	  else
+	    throw "home-manager only supported in standalone or nix-darwin";
   	  config.homeManager.username = hostConfig.username;
   	  config.homeManager.homeDirectory = hostConfig.homeDirectory;
   	  config.homeManager.stateVersion = hostConfig.stateVersion;

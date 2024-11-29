@@ -14,6 +14,7 @@ with lib;
     packages = import ./packages.nix { inherit pkgs; };
     sessionVariables = import ./env.nix {
       pkgs = pkgs;
+      configRoot = cfg.configRoot;
       username = cfg.username;
     };
     shellAliases = import ./aliases.nix;
