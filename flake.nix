@@ -30,34 +30,19 @@
     homebrew-cask, ...
   }:
   let
-    hostConfigFile = ./.hostconfig.nix;
-    hostConfig = import hostConfigFile;
     pkgs = nixpkgs.legacyPackages.${hostConfig.system};
-    homeManagerConfig = {
-      ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [
-          ./home-manager/default.nix
-          ({ config, ... }: {
-            config.homeManager = with hostConfig; {
-            enable = true;
-            inherit
-              isStandalone
-              isDarwin
-              username
-              homeDirectory
-              stateVersion;
-            };
-          })
-        ];
-      };
-    };
+    hostConfig = import ./.hostconfig.nix;
   in with hostConfig;
   {
 
-    homeConfigurations = if isStandalone then homeManagerConfig else null;
+#    homeConfigurations = if isStandalone then {
+#      ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
+#        inherit pkgs;
+#        modules = homeManagerModules;
+#      };
+#    } else null;
 
-    darwinConfigurations = if isDarwin then {
+    darwinConfigurations = if hostConfig.isDarwin then {
       ${hostname} = nix-darwin.lib.darwinSystem {
 
         modules = [
@@ -98,7 +83,9 @@
               isHidden = false;
               shell = self.darwinPackages.zsh;
             };
-            home-manager.users = homeManagerConfig;
+            home-manager.users.${username} = import ./home-manager/default.nix {
+              inherit pkgs hostConfig;
+            };
           }
           nix-homebrew.darwinModules.nix-homebrew
           {
@@ -132,7 +119,7 @@
     } else null;
 
     # Expose the package set, including overlays, for convenience.
-    darwinPackages = if isDarwin then self.darwinConfigurations.${hostname}.pkgs else null;
+    darwinPackages = if hostConfig.isDarwin then self.darwinConfigurations.${hostname}.pkgs else null;
 
   };
 }

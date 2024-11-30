@@ -1,33 +1,23 @@
-{ config, pkgs, lib, ...}:
+{ pkgs , hostConfig }:
 
-let
-  cfg = config.homeManager;
-in
-
-with lib;
-
-{
-  imports = [ ./options.nix ];
-
+with hostConfig; {
   home = {
     inherit (pkgs);
-    packages = import ./packages.nix { inherit pkgs; };
+    packages = import ./packages.nix {
+      inherit pkgs;
+    };
     sessionVariables = import ./env.nix {
-      pkgs = pkgs;
-      username = cfg.username;
-      isStandalone = cfg.isStandalone;
-      isDarwin = cfg.isDarwin;
+      inherit pkgs username isStandalone isDarwin;
     };
     shellAliases = import ./aliases.nix {
-      isStandalone = cfg.isStandalone;
-      isDarwin = cfg.isDarwin;
+      inherit isStandalone isDarwin;
     };
-    username = cfg.username;
-    homeDirectory = cfg.homeDirectory;
-    stateVersion = cfg.stateVersion;
+    inherit username homeDirectory stateVersion;
   };
 
-  programs = import ./programs.nix { inherit pkgs; };
+  programs = import ./programs.nix {
+    inherit pkgs;
+  };
 
   nix = {
     package = pkgs.lib.mkForce pkgs.nix;
