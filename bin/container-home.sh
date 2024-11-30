@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $(dirname $0)
+cd $(dirname $0)/..
 
 DISTRO=${DISTRO:-arch}
 
@@ -74,7 +74,7 @@ if ${BUILD_HOME}; then
   docker build \
     . \
     -t ${HOME_IMAGE} \
-    -f 
+    -f ${DOCKERFILE_HOME}
 fi
 
 if ${PUSH_HOME}; then

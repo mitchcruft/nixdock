@@ -8,7 +8,7 @@ function fail {
 }
 
 function usage {
-  echo "usage: $0 [distro]" >&2
+  echo "usage: $0 [--headless] [--distro=X] [--arch=X]" >&2
   exit 1
 }
 
@@ -24,7 +24,7 @@ function usage {
 GITUSER="${USER}"
 [ "${GITUSER}" = "m" ] && GITUSER="mikecurtis"
 
-OS=$1
+DISTRO=
 OSTYPE=
 ARCH=
 STANDALONE=false
@@ -32,26 +32,48 @@ DARWIN=false
 HEADLESS=false
 WSL=false
 
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --headless)
+      HEADLESS=true
+      shift # past argument
+      ;;
+    --distro)
+      DISTRO="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --arch)
+      ARCH="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
 [ -f "/etc/wsl.conf" ] && WSL=true
 [ ${WSL} ] && HEADLESS=true
 
-
-
-if [ -z "$OS" ]; then
+if [ -z "${DISTRO}" ]; then
   if [ -f /etc/os-release ]; then
     . /etc/os-release
-    case "$ID" in
+    case "${ID}" in
       ubuntu)
-        OS="ubuntu"
-        OSTYPE="linux"
+        DISTRO="ubuntu"
         ;;
       arch|archarm)
-        OS="arch"
-        OSTYPE="linux"
+        DISTRO="arch"
         ;;
       nixos)
-        OS="nixos"
-        OSTYPE="linux"
+        DISTRO="nixos"
         ;;
     esac
   fi
@@ -60,33 +82,34 @@ fi
 if type uname >/dev/null 2>&1; then
 
   ARCH="$(uname -m)"
-  if [ -z "$OS" ]; then
+
+  if [ -z "$DISTRO" ]; then
     case "$(uname -s)" in
       Linux)
-        OS="linux"
-        OSTYPE="linux"
+        DISTRO="linux"
         ;;
       Darwin)
-        OS="darwin"
-        OSTYPE="darwin"
+        DISTRO="darwin"
         ;;
     esac
   fi
 
 fi
 
-case "${OS}" in
+case "${DISTRO}" in
   linux|ubuntu|arch)
+    OSTYPE="linux"
     STANDALONE=true
     ;;
   darwin)
+    OSTYPE="darwin"
     DARWIN=true
     ;;
   nixos)
     fail "NixOS unsupported!"
     ;;
   *)
-    fail "OS \"${OS}\" unsupported!"
+    fail "DISTRO \"${DISTRO}\" unsupported!"
     ;;
 esac
 
