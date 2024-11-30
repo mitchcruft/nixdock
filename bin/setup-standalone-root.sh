@@ -109,7 +109,12 @@ getent group wheel || groupadd wheel
 sh <(curl -L https://nixos.org/nix/install) --daemon --yes
 
 # Add users
-useradd -m -G nixbld,wheel -s /bin/zsh ${USER}
+if getent passwd ${USER}; then
+  usermod -aG nixbld,wheel ${USER}
+  chsh -s /bin/zsh ${USER}
+else
+  useradd -m -G nixbld,wheel -s /bin/zsh ${USER}
+fi
 
 # Set up sudo
 echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
@@ -130,7 +135,9 @@ sudo -u ${USER} sh -c '
 set -ex
 mkdir ~/.config
 git clone http://github.com/mitchcruft/nixdock ~/.config/home-manager
-PATH="/nix/var/nix/profiles/default/bin:${PATH}" nix --extra-experimental-features "flakes nix-command" run home-manager/release-24.05 -- switch
+touch ~/.config/home-manager/.hostconfig.nix
+make -C ~/.config/home-manager hc
+PATH="/nix/var/nix/profiles/default/bin:${PATH}" nix --extra-experimental-features "flakes nix-command" run home-manager/release-24.05 -- --extra-experimental-features "flakes nix-command" switch
 '
 
 if ${ARCH}; then
