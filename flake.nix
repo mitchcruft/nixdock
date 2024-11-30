@@ -83,7 +83,7 @@
               isHidden = false;
               shell = self.darwinPackages.zsh;
             };
-            home-manager.users.${username} = import ./home-manager/default.nix {
+            home-manager.users.${username} = import ./home-manager/home.nix {
               inherit pkgs hostConfig;
             };
           }
