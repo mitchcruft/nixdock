@@ -4,7 +4,7 @@ with hostConfig; {
   home = {
     inherit (pkgs);
     packages = import ./packages.nix {
-      inherit pkgs;
+      inherit pkgs hostConfig;
     };
     sessionVariables = import ./env.nix {
       inherit pkgs username isStandalone isDarwin;
@@ -16,7 +16,7 @@ with hostConfig; {
   };
 
   programs = import ./programs.nix {
-    inherit pkgs gitUsername;
+    inherit pkgs hostConfig;
   };
 
   nix = {

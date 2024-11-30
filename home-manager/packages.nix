@@ -1,23 +1,19 @@
-{ pkgs }:
+{ pkgs, hostConfig }:
 
-with pkgs; [
-    (nerdfonts.override { fonts = [
+let
+  baseList = with pkgs; [
+    delta
+    gh
+    tmux
+  ];
+in
+  # Additional packages for non-headless setups.
+  baseList ++ (if hostConfig.isHeadless then [] else [
+    (pkgs.nerdfonts.override { fonts = [
       "JetBrainsMono"
       # Fonts are super large.  Enable as needed.
       #"FiraCode"
       #"GeistMono"
       #"Noto"
-    ]; })
-
-    bind
-    delta
-    gh
-    git
-    go
-    man-pages
-    tmux
-    zsh
-    # TODO: Only on macos
-    #alt-tab-macos
-    #raycast
-]
+    ];})
+  ])

@@ -29,11 +29,13 @@ OSTYPE=
 ARCH=
 STANDALONE=false
 DARWIN=false
+HEADLESS=false
 WSL=false
 
-if [ -f "/etc/wsl.conf" ]; then
-  WSL=true
-fi
+[ -f "/etc/wsl.conf" ] && WSL=true
+[ ${WSL} ] && HEADLESS=true
+
+
 
 if [ -z "$OS" ]; then
   if [ -f /etc/os-release ]; then
@@ -112,6 +114,7 @@ echo "{
   isStandalone = ${STANDALONE};
   isDarwin = ${DARWIN};
   isWsl = ${WSL};
+  isHeadless = ${HEADLESS};
   system = \"${SYSTEM}\";
   stateVersion = \"24.05\";
   username = \"${USER}\";
