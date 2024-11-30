@@ -60,7 +60,7 @@ done
 set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
 [ -f "/etc/wsl.conf" ] && WSL=true
-[ ${WSL} ] && HEADLESS=true
+${WSL} && HEADLESS=true
 
 if [ -z "${DISTRO}" ]; then
   if [ -f /etc/os-release ]; then
