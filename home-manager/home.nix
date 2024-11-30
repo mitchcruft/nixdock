@@ -16,7 +16,7 @@ with hostConfig; {
   };
 
   programs = import ./programs.nix {
-    inherit pkgs;
+    inherit pkgs gitUsername;
   };
 
   nix = {

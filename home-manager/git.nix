@@ -1,8 +1,10 @@
+{ gitUsername }:
+
 {
     enable = true;
 
-    userName = "mitchcruft";
-    userEmail = "mitchcruft@users.noreply.github.com";
+    userName = "${gitUsername}";
+    userEmail = "${gitUsername}@users.noreply.github.com";
 
     delta = {
       enable = true;

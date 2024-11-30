@@ -21,6 +21,9 @@ function usage {
 [ "${HOSTNAME}" ] || HOSTNAME="$(hostname)"
 [ "${HOSTNAME}" ] || fail 'Cannot identify \${HOSTNAME}'
 
+GITUSER="${USER}"
+[ "${GITUSER}" = "m" ] && GITUSER="mikecurtis"
+
 OS=$1
 OSTYPE=
 ARCH=
@@ -112,6 +115,7 @@ echo "{
   system = \"${SYSTEM}\";
   stateVersion = \"24.05\";
   username = \"${USER}\";
+  gitUsername = \"${GITUSER}\";
   homeDirectory = \"${HOME}\";
   hostname = \"${HOSTNAME}\";
 }"
