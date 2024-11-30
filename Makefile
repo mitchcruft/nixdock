@@ -8,10 +8,11 @@ HOMEMANAGER := $(shell bash -c '\
     || echo "home-manager" \
 ')
 
-all: hcdiffok hc switch
+all: hc switch
 
-hc: $(HOSTCONFIG)
-	$(RUNNER) > $(HOSTCONFIG) 2>/dev/null
+hc: hcdiffok hcnodiff
+
+dry: hcdiffok switchdry
 
 hcdiff:
 	$(RUNNER) 2>/dev/null | diff $(HOSTCONFIG) -
@@ -19,11 +20,17 @@ hcdiff:
 hcdiffok:
 	$(RUNNER) 2>/dev/null | diff $(HOSTCONFIG) - ; exit 0
 
+hcnodiff: $(HOSTCONFIG)
+	$(RUNNER) > $(HOSTCONFIG) 2>/dev/null
+
 build:
 	$(HOMEMANAGER) --flake path:. build
 
 switch:
 	$(HOMEMANAGER) --flake path:. switch
+
+switchdry:
+	$(HOMEMANAGER) --flake path:. switch --dry-run
 
 # TODO: Clean home-manager as well?
 clean:
