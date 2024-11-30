@@ -123,7 +123,7 @@ esac
 case "${ARCH}" in
   x86_64)
     ;;
-  arm64)
+  aarch64|arm64)
     ARCH="aarch64"
     ;;
   *)
