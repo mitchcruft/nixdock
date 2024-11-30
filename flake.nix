@@ -35,12 +35,18 @@
   in with hostConfig;
   {
 
-#    homeConfigurations = if isStandalone then {
-#      ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
-#        inherit pkgs;
-#        modules = homeManagerModules;
-#      };
-#    } else null;
+   homeConfigurations = if isStandalone then {
+     ${hostConfig.username} = home-manager.lib.homeManagerConfiguration {
+       inherit pkgs;
+       modules = [
+         ({ ... }: import ./home-manager/home.nix {
+           inherit pkgs hostConfig;
+	 })
+       ];
+       #home-manager.users.${username} = import ./home-manager/home.nix {
+       #};
+     };
+   } else null;
 
     darwinConfigurations = if hostConfig.isDarwin then {
       ${hostname} = nix-darwin.lib.darwinSystem {
