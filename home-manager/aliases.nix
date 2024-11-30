@@ -4,9 +4,9 @@
   # Add aliases here.
   ch = "container-home.sh";
   hms = (if isStandalone then
-    "home-manager"
+    "home-manager --flake path:$HOME/.config/home-manager"
   else if isDarwin then
-    "nix-darwin"
+    "darwin-rebuild --flake path:$HOME/.config/nix-darwin"
   else
     throw "home-manager only supported in standalone or nix-darwin"
   ) + " switch && unalias -a && exec $SHELL";
