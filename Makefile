@@ -24,13 +24,13 @@ hcnodiff: $(HOSTCONFIG)
 	$(RUNNER) > $(HOSTCONFIG) 2>/dev/null
 
 build:
-	$(HOMEMANAGER) --flake path:. build
+	$(HOMEMANAGER) --flake path:$(PWD) build
 
 switch:
-	$(HOMEMANAGER) --flake path:. switch
+	$(HOMEMANAGER) --flake path:$(PWD) switch
 
 switchdry:
-	$(HOMEMANAGER) --flake path:. switch --dry-run
+	$(HOMEMANAGER) --flake path:$(PWD) switch --dry-run
 
 # TODO: Clean home-manager as well?
 clean:
