@@ -15,8 +15,8 @@ function usage {
 ARCH=false
 UBUNTU=false
 WSL=false
-USER=m
-HOSTNAME=
+USER="m"
+HOSTNAME="${HOSTNAME:-$(hostname)}"
 DISTROS=0
 
 POSITIONAL_ARGS=()
@@ -136,6 +136,7 @@ set -ex
 mkdir ~/.config
 git clone http://github.com/mitchcruft/nixdock ~/.config/home-manager
 touch ~/.config/home-manager/.hostconfig.nix
+# TODO: make --headless
 make -C ~/.config/home-manager hc
 PATH="/nix/var/nix/profiles/default/bin:${PATH}" nix --extra-experimental-features "flakes nix-command" run home-manager/release-24.05 -- --extra-experimental-features "flakes nix-command" switch
 '
