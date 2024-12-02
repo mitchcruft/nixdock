@@ -3,7 +3,8 @@
 cd $(dirname $0)
 
 DISTRO=$1
-NAME="orb-${DISTRO}"
+HOSTNAME="${HOSTNAME:-$(hostname)}"
+NAME="${HOSTNAME}-orb-${DISTRO}"
 USER="${USER:-$(whoami)}"
 
 function fail {
@@ -17,11 +18,10 @@ function usage {
 }
 
 case ${DISTRO} in
-  arch|ubuntu)
-    ;;
-  *)
-    fail "Unsupported DISTRO: \"${DISTRO}\""
-    ;;
+arch | ubuntu) ;;
+*)
+  fail "Unsupported DISTRO: \"${DISTRO}\""
+  ;;
 esac
 
 set -ex
