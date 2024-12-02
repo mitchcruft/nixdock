@@ -15,7 +15,7 @@ with hostConfig; {
     inherit username homeDirectory stateVersion;
   };
 
-  programs = import ./programs.nix {
+  programs = import ./programs/programs.nix {
     inherit pkgs hostConfig;
   };
 

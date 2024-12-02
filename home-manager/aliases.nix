@@ -11,6 +11,7 @@ let
   );
 in
 {
+  cat = "bat";
   ch = "container-home.sh";
   view = "nvim -R";
 

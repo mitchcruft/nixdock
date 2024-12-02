@@ -14,4 +14,8 @@ let
 in
 {
   PATH = "${singleNixProfile}:${multiNixProfile}:${swBin}:${userBin}:${homeManagerBin}:$PATH";
+
+  # Use bat for manpages
+  MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+  MANROFFOPT = "-c";
 }
