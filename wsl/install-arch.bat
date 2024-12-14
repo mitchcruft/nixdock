@@ -1,4 +1,3 @@
-cd %TEMP%
 if NOT EXIST "ArchInstall" (
   mkdir ArchInstall
 )
