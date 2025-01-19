@@ -28,12 +28,19 @@ fzf --ansi --disabled --query "''$INITIAL_QUERY" \
   ];
 in
   # Additional packages for non-headless setups.
-  baseList ++ (if hostConfig.isHeadless then [] else [
-    (pkgs.nerdfonts.override { fonts = [
-      "JetBrainsMono"
-      # Fonts are super large.  Enable as needed.
-      #"FiraCode"
-      #"GeistMono"
-      #"Noto"
-    ];})
-  ])
+  baseList ++ (if hostConfig.isHeadless then [] else (
+    if hostConfig.isNixStable then [
+      (pkgs.nerdfonts.override { fonts = [
+        "JetBrainsMono"
+        # Fonts are super large.  Enable as needed.
+        #"FiraCode"
+        #"GeistMono"
+        #"Noto"
+      ]; } )
+    ] else [
+      pkgs.nerd-fonts.jetbrains-mono
+      #pkgs.nerd-fonts.fira-code
+      #pkgs.nerd-fonts.geist-mono
+      #pkgs.nerd-fonts.noto
+    ])
+  )
