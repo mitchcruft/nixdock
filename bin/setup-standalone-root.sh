@@ -83,6 +83,7 @@ if ${UBUNTU}; then
 
   # Install needed base packages
   apt install -y \
+    build-essential \
     git \
     zsh
 
