@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     nix-darwin-stable = {
-      url = "github:LnL7/nix-darwin/master";
+      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
@@ -38,7 +38,7 @@
       flake = false;
     };
     homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
+      url = "github:Homebrew/homebrew-cask";
       flake = false;
     };
   };
