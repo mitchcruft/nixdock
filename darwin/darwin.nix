@@ -31,8 +31,9 @@ with hostConfig; {
         homebrew = {
           enable = true;
           casks = [
-           # "alt-tab"
-           # "orbstack"
+            "alt-tab"
+            "orbstack"
+	    "ghostty"
           ];
         };
         users.users.${username} = {

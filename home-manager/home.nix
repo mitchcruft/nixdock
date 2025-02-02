@@ -19,6 +19,11 @@ with hostConfig; {
     inherit pkgs hostConfig;
   };
 
+  # TODO: Move to using programs/ghostty once nixpkg works with Darwin
+  xdg.configFile = if hostConfig.isDarwin then if !hostConfig.isHeadless then {
+    "ghostty/config".text = builtins.readFile ./programs/config/ghostty;
+  } else null else null;
+
   nix = {
     package = pkgs.lib.mkForce pkgs.nix;
     extraOptions = "experimental-features = nix-command flakes";

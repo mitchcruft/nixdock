@@ -1,0 +1,11 @@
+auto-update = download
+cursor-color = "#f81ce5"
+cursor-style = block
+font-family = "JetBrains Mono"
+font-style = Bold
+macos-non-native-fullscreen = true
+macos-titlebar-style = hidden
+quit-after-last-window-closed = true
+shell-integration-features = no-cursor
+theme = "Firefly Traditional"
+window-save-state = always
