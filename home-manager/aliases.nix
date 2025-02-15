@@ -11,11 +11,12 @@ let
   );
 in
 {
+  cat = "bat";
   ch = "container-home.sh";
   view = "nvim -R";
 
   # Switch home-manager/nix-darwin
-  hms = hmMake + " && unalias -a && exec $SHELL";
+  hms = hmMake + " && unalias -a && unset -m '*_SOURCED' && exec $SHELL";
   # Dry run witch home-manager/nix-darwin
   hmd = hmMake + " dry";
   # Build and diff home-manager/nix-darwin host config

@@ -30,6 +30,7 @@ ARCH=
 STANDALONE=false
 DARWIN=false
 HEADLESS=false
+STABLE=true
 WSL=false
 
 POSITIONAL_ARGS=()
@@ -138,6 +139,7 @@ echo "{
   isDarwin = ${DARWIN};
   isWsl = ${WSL};
   isHeadless = ${HEADLESS};
+  isNixStable = ${STABLE};
   system = \"${SYSTEM}\";
   stateVersion = \"24.05\";
   username = \"${USER}\";

@@ -83,6 +83,7 @@ if ${UBUNTU}; then
 
   # Install needed base packages
   apt install -y \
+    build-essential \
     git \
     zsh
 
@@ -138,7 +139,7 @@ git clone http://github.com/mitchcruft/nixdock ~/.config/home-manager
 touch ~/.config/home-manager/.hostconfig.nix
 # TODO: make --headless
 make -C ~/.config/home-manager hc
-PATH="/nix/var/nix/profiles/default/bin:${PATH}" nix --extra-experimental-features "flakes nix-command" run home-manager/release-24.05 -- --extra-experimental-features "flakes nix-command" switch
+PATH="/nix/var/nix/profiles/default/bin:${PATH}" NIX_CONFIG="experimental-features = nix-command flakes" nix run home-manager/release-24.05 -- switch --flake path:.
 '
 
 if ${ARCH}; then
