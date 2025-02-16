@@ -23,37 +23,37 @@ POSITIONAL_ARGS=()
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --arch)
-      ARCH=true
-      DISTROS=$((DISTROS+1))
-      shift # past argument
-      ;;
-    --ubuntu)
-      UBUNTU=true
-      DISTROS=$((DISTROS+1))
-      shift # past argument
-      ;;
-    --wsl)
-      WSL=true
-      shift # past argument
-      ;;
-    -u|--user)
-      USER="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    -h|--hostname)
-      HOSTNAME="$2"
-      shift # past argument
-      shift # past value
-      ;;
-    -*|--*)
-      fail "Unknown option $1" 
-      ;;
-    *)
-      POSITIONAL_ARGS+=("$1") # save positional arg
-      shift # past argument
-      ;;
+  --arch)
+    ARCH=true
+    DISTROS=$((DISTROS + 1))
+    shift # past argument
+    ;;
+  --ubuntu)
+    UBUNTU=true
+    DISTROS=$((DISTROS + 1))
+    shift # past argument
+    ;;
+  --wsl)
+    WSL=true
+    shift # past argument
+    ;;
+  -u | --user)
+    USER="$2"
+    shift # past argument
+    shift # past value
+    ;;
+  -h | --hostname)
+    HOSTNAME="$2"
+    shift # past argument
+    shift # past value
+    ;;
+  -* | --*)
+    fail "Unknown option $1"
+    ;;
+  *)
+    POSITIONAL_ARGS+=("$1") # save positional arg
+    shift                   # past argument
+    ;;
   esac
 done
 
@@ -118,7 +118,7 @@ else
 fi
 
 # Set up sudo
-echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/01_wheel
+echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >/etc/sudoers.d/01_wheel
 
 if ${WSL}; then
   # Set up wsl
@@ -128,17 +128,19 @@ if ${WSL}; then
   
   [user]
   default = "'${USER}'"
-  ' >> /etc/wsl.conf
+  ' >>/etc/wsl.conf
 fi
 
 # Install home-manager
 sudo -u ${USER} sh -c '
 set -ex
 mkdir ~/.config
-git clone http://github.com/mitchcruft/nixdock ~/.config/home-manager
-touch ~/.config/home-manager/.hostconfig.nix
+cd ~/.config
+git clone http://github.com/mitchcruft/nixdock home-manager
+cd home-manager
+touch .hostconfig.nix
 # TODO: make --headless
-make -C ~/.config/home-manager hc
+make hc
 PATH="/nix/var/nix/profiles/default/bin:${PATH}" NIX_CONFIG="experimental-features = nix-command flakes" nix run home-manager/release-24.05 -- switch --flake path:.
 '
 
