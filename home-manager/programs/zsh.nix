@@ -32,6 +32,6 @@ fi
 source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
 source ${pkgs.concatText "p10k.zsh" [ ./config/p10k.zsh ]}
 
-[ "$TERM_PROGRAM" = "ghostty" ] && ! $(which ghostty >/dev/null 2>&1) && export TERM=xterm-256color
+( [ "$TERM" = "xterm-ghostty" ] || [ "$TERM_PROGRAM" = "ghostty" ] ) && ! $(which ghostty >/dev/null 2>&1) && export TERM=xterm-256color
   '';
 }
