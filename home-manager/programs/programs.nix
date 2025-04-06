@@ -2,6 +2,7 @@
 
 with hostConfig; {
   bat = import ./bat.nix;
+  direnv = import ./direnv.nix;
   eza = import ./eza.nix;
   fzf = import ./fzf.nix;
   git = import ./git.nix { inherit gitUsername; };
