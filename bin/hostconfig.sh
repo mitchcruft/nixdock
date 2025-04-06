@@ -141,7 +141,7 @@ echo "{
   isHeadless = ${HEADLESS};
   isNixStable = ${STABLE};
   system = \"${SYSTEM}\";
-  stateVersion = \"24.05\";
+  stateVersion = \"24.11\";
   username = \"${USER}\";
   gitUsername = \"${GITUSER}\";
   homeDirectory = \"${HOME}\";

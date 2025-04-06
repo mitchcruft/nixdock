@@ -141,7 +141,7 @@ cd home-manager
 touch .hostconfig.nix
 # TODO: make --headless
 make hc
-PATH="/nix/var/nix/profiles/default/bin:${PATH}" NIX_CONFIG="experimental-features = nix-command flakes" nix run home-manager/release-24.05 -- switch --flake path:.
+PATH="/nix/var/nix/profiles/default/bin:${PATH}" NIX_CONFIG="experimental-features = nix-command flakes" nix run home-manager/release-24.11 -- switch --flake path:.
 '
 
 if ${ARCH}; then
