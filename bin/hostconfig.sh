@@ -143,6 +143,7 @@ echo "{
   system = \"${SYSTEM}\";
   stateVersion = \"24.11\";
   username = \"${USER}\";
+  uid = \"$(id -u ${USER})\";
   gitUsername = \"${GITUSER}\";
   homeDirectory = \"${HOME}\";
   hostname = \"${HOSTNAME}\";
