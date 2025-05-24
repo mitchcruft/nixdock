@@ -3,16 +3,16 @@
 
   inputs = {
 
-    # Release 24.11
+    # Release 25.05
     nixpkgs-stable = {
-      url = "github:NixOS/nixpkgs/release-24.11";
+      url = "github:NixOS/nixpkgs/release-25.05";
     };
     home-manager-stable = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     nix-darwin-stable = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
@@ -25,7 +25,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     nix-darwin-unstable = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
