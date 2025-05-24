@@ -27,4 +27,7 @@ in
   hmd = hmMake + " dry";
   # Build and diff home-manager/nix-darwin host config
   hmhc = hmMake + " hc";
+
+  # tmux attach/start
+  tm = "tmux list-sessions > /dev/null 2>&1 && tmux a || tmux";
 }
