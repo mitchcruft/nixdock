@@ -12,6 +12,8 @@ function usage {
   exit 1
 }
 
+[[ $(id -u) -ne 0 ]] && fail "Must run as root"
+
 ARCH=false
 UBUNTU=false
 WSL=false
