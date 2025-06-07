@@ -10,7 +10,6 @@ with hostConfig; {
         environment.systemPackages = [];
 
         # Auto upgrade nix package and the daemon service.
-        services.nix-daemon.enable = true;
         nix.package = pkgs.nix;
 
         # Necessary for using flakes on this system.
@@ -23,6 +22,8 @@ with hostConfig; {
         # changing.
         # $ darwin-rebuild changelog
         system.stateVersion = 5;
+
+	system.primaryUser = hostConfig.username;
 
         # The platform the configuration will be used on.
         nixpkgs.hostPlatform = system;
