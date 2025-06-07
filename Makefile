@@ -4,7 +4,7 @@ PWD := $(shell pwd)
 DIRBASE := $(shell pwd | rev | cut -d/ -f1 | rev)
 HOMEMANAGER := $(shell bash -c '\
   [ "$(DIRBASE)" = "nix-darwin" ] \
-    && echo "darwin-rebuild" \
+    && echo "sudo darwin-rebuild" \
     || echo "home-manager" \
 ')
 
