@@ -58,7 +58,7 @@
   in with hostConfig;
   {
 
-    homeConfigurations = if isStandalone then {
+    homeConfigurations = if isStandalone && !isDarwin then {
       ${username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
