@@ -17,7 +17,7 @@ function usage {
 ARCH=false
 UBUNTU=false
 WSL=false
-USER="m"
+USER="mikecurtis"
 HOSTNAME="${HOSTNAME:-$(hostname)}"
 DISTROS=0
 
@@ -86,6 +86,7 @@ if ${UBUNTU}; then
   # Install needed base packages
   apt install -y \
     build-essential \
+    curl \
     git \
     zsh
 
@@ -100,6 +101,7 @@ elif ${ARCH}; then
   # Install needed base packages
   pacman --noconfirm -S \
     base-devel \
+    curl \
     git \
     zsh
 
@@ -136,7 +138,7 @@ fi
 # Install home-manager
 sudo -u ${USER} sh -c '
 set -ex
-mkdir ~/.config
+mkdir -p ~/.config
 cd ~/.config
 git clone http://github.com/mitchcruft/nixdock home-manager
 cd home-manager
