@@ -13,7 +13,7 @@ let
   userBin = "$HOME/bin";
 in
 {
-  PATH = "${singleNixProfile}:${multiNixProfile}:${swBin}:${userBin}:${homeManagerBin}:$PATH";
+  PATH = "${singleNixProfile}:${multiNixProfile}:${swBin}:${userBin}:${homeManagerBin}:$HOME/.local/bin:$PATH";
 
   # Use bat for manpages
   MANPAGER = "sh -c 'col -bx | bat -l man -p'";
