@@ -4,7 +4,7 @@ FROM nixos/nix AS home-manager
 RUN echo 'experimental-features = nix-command flakes' > /etc/nix/nix.conf
 
 # Update nix-channel with home-manager
-RUN nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz home-manager
+RUN nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
 RUN nix-channel --update
 
 # Create user m
@@ -25,8 +25,8 @@ RUN mkdir -p .config
 COPY --chown=m:m . .config/home-manager
 WORKDIR /home/m/.config/home-manager
 RUN bash ./bin/hostconfig.sh --headless --distro=linux --arch=x86_64 > .hostconfig.nix
-RUN nix run home-manager/release-24.11 -- build
-RUN nix run home-manager/release-24.11 -- switch
+RUN nix run home-manager/release-25.05 -- build
+RUN nix run home-manager/release-25.05 -- switch
 WORKDIR /home/m
 RUN rm -rf .config/home-manager
 
