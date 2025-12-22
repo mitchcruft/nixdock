@@ -140,7 +140,7 @@ sudo -u ${USER} sh -c '
 set -ex
 mkdir -p ~/.config
 cd ~/.config
-git clone http://github.com/mitchcruft/nixdock home-manager
+[ -d home-manager ] || git clone http://github.com/mitchcruft/nixdock home-manager
 cd home-manager
 touch .hostconfig.nix
 # TODO: make --headless
