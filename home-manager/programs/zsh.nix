@@ -1,4 +1,5 @@
-{ pkgs, ... }:
+{ pkgs, hostConfig, ... }:
+
 
 {
   enable = true;
@@ -24,10 +25,25 @@ if [ -n "$NIX_SHELL_DEPTH" ]; then
 fi
     '')
     (pkgs.lib.mkOrder 1000 ''
-
 ( [ "$TERM" = "xterm-ghostty" ] || [ "$TERM_PROGRAM" = "ghostty" ] ) && ! $(which ghostty >/dev/null 2>&1) && export TERM=xterm-256color
 
 bindkey -e
-    '')
+  '')
+    (if hostConfig.installNode then pkgs.lib.mkOrder 1001 ''
+# fnm
+FNM_PATH="$HOME/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$HOME/.local/share/fnm:$PATH"
+  eval "`fnm env --use-on-cd --version-file-strategy=recursive --resolve-engines`"
+fi
+
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+    '' else "")
   ];
 }

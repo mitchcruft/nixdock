@@ -11,5 +11,5 @@ with hostConfig; {
   ripgrep = import ./ripgrep.nix;
   starship = import ./starship.nix;
   tmux = import ./tmux.nix { inherit pkgs; };
-  zsh = import ./zsh.nix { inherit pkgs; };
+  zsh = import ./zsh.nix { inherit pkgs hostConfig; };
 }

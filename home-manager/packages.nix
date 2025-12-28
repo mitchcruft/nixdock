@@ -34,4 +34,7 @@ in
       #pkgs.nerd-fonts.geist-mono
       #pkgs.nerd-fonts.noto
     ])
-  )
+  ) ++ (if hostConfig.installNode then [
+    pkgs.fnm
+    pkgs.pnpm
+  ] else [])

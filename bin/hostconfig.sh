@@ -147,6 +147,7 @@ echo "{
   gitUsername = \"${GITUSER}\";
   homeDirectory = \"${HOME}\";
   hostname = \"${HOSTNAME}\";
+  installNode = false;
 }"
 }
 
