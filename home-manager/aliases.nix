@@ -22,7 +22,7 @@ in
   # git pull
   hmp = "(cd " + hmDir + "&& git pull)";
   # Switch home-manager/nix-darwin
-  hms = hmMake + " && unalias -a && unset -m '*_SOURCED' && exec $SHELL";
+  hms = hmMake + " switch && unalias -a && unset -m '*_SOURCED' && exec $SHELL";
   # Dry run witch home-manager/nix-darwin
   hmd = hmMake + " dry";
   # Build and diff home-manager/nix-darwin host config
