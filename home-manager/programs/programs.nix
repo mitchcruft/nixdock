@@ -10,6 +10,5 @@ with hostConfig; {
   neovim = import ./neovim.nix { inherit pkgs; };
   ripgrep = import ./ripgrep.nix;
   tmux = import ./tmux.nix { inherit pkgs; };
-  wezterm = if isHeadless then {} else import ./wezterm.nix;
   zsh = import ./zsh.nix { inherit pkgs; };
 }
