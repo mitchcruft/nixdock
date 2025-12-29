@@ -4,7 +4,7 @@ ENV IMGUSER=mikecurtis
 ENV IMGGROUP=$IMGUSER
 ENV USER=$IMGUSER
 ENV HOME=/home/$IMGUSER
-ENV NIXVERSION=release-25.05
+ENV NIXVERSION=release-25.11
 ENV TMP=/tmp/nixtmp
 ENV STORE=/tmp/store
 ENV PATH="/nix/var/nix/profiles/default/bin:${PATH}"
@@ -30,7 +30,7 @@ RUN mkdir -p .config
 COPY --chown=$IMGUSER:$IMGGROUP . .config/home-manager
 WORKDIR $HOME/.config/home-manager
 RUN bash ./bin/hostconfig.sh --headless --distro=linux --arch=x86_64 > .hostconfig.nix
-RUN nix run home-manager/release-25.05 -- switch --flake path:.
+RUN nix run home-manager/$NIXVERSION -- switch --flake path:.
 WORKDIR $HOME
 RUN rm -rf .config/home-manager
 
