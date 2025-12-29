@@ -1,6 +1,5 @@
 { pkgs, hostConfig, ... }:
 
-
 {
   enable = true;
   autosuggestion = {

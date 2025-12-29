@@ -1,3 +1,5 @@
+{ hostConfig, ... }:
+
 {
   enable = true;
   enableZshIntegration = true;
@@ -65,4 +67,6 @@
     gcloud.disabled = true;
     
   };
+
+  configPath = hostConfig.homeDirectory + "/.config/starship/starship.toml";
 }
