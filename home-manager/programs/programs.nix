@@ -2,6 +2,7 @@
 
 with hostConfig; {
   bat = import ./bat.nix;
+  delta = import ./delta.nix;
   direnv = import ./direnv.nix;
   eza = import ./eza.nix;
   fzf = import ./fzf.nix;

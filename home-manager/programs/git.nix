@@ -1,24 +1,17 @@
 { gitUsername }:
 
 {
-    enable = true;
+  enable = true;
 
-    userName = "${gitUsername}";
-    userEmail = "${gitUsername}@users.noreply.github.com";
-
-    delta = {
-      enable = true;
-      options = {
-        diff-highlight = true;
-	line-numbers = true;
-        side-by-side = true;
-      };
+  settings = {
+    user = {
+      name = "${gitUsername}";
+      email = "${gitUsername}@users.noreply.github.com";
     };
 
-    extraConfig = {
-      credential.helper = "!gh auth git-credential";
-      init.defaultBranch = "main";
-      merge.conflictstyle = "diff3";
-      diff.colorMoved = "default";
-    };
+    credential.helper = "!gh auth git-credential";
+    init.defaultBranch = "main";
+    merge.conflictstyle = "diff3";
+    diff.colorMoved = "default";
+  };
 }

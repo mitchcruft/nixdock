@@ -2,7 +2,6 @@
 
 let
   baseList = with pkgs; [
-    delta
     gh
     tmux
     # fzf / ripgrep / bat / nvim script
