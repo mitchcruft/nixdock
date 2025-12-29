@@ -1,49 +1,58 @@
 FROM nixos/nix AS home-manager
 
+ENV IMGUSER=mikecurtis
+ENV IMGGROUP=$IMGUSER
+ENV USER=$IMGUSER
+ENV HOME=/home/$IMGUSER
+ENV NIXVERSION=release-25.05
+ENV TMP=/tmp/nixtmp
+ENV STORE=/tmp/store
+ENV PATH="/nix/var/nix/profiles/default/bin:${PATH}"
+ENV NIX_CONFIG="experimental-features = nix-command flakes"
+
 # Allow ourselves to call nix without warnings
 RUN echo 'experimental-features = nix-command flakes' > /etc/nix/nix.conf
 
-# Update nix-channel with home-manager
-RUN nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
-RUN nix-channel --update
+# Create user
+RUN echo "$IMGUSER:x:1:1:x:/home/$IMGUSER:/bin/bash" >> /etc/passwd
+RUN echo "$IMGGROUP:x:1:$IMGUSER" >> /etc/group
+RUN nix-env -iA nixpkgs.gnused
+RUN ${HOME}/.nix-profile/bin/sed -i -e "s/^\(nixbld.*\)/\1,$IMGUSER/" /etc/group
 
-# Create user m
-RUN echo "m:x:1:1:x:/home/m:/bin/bash" >> /etc/passwd
-RUN echo "m:x:1:m" >> /etc/group
-RUN nix-env --install gnused
-RUN sed -i -e 's/^\(nixbld.*\)/\1,m/' /etc/group
-
-# Allow m to write to /nix/var
-RUN chown -R m:m /nix/var
+# Allow user to write to /nix/var
+RUN chown -R $IMGUSER:$IMGGROUP /nix/var
+RUN chown -R $IMGUSER:$IMGGROUP $HOME
 
 # Initialize home directory
-USER m
-ENV USER=m
-ENV HOME=/home/m
-WORKDIR /home/m
+USER $IMGUSER
+WORKDIR $HOME
 RUN mkdir -p .config
-COPY --chown=m:m . .config/home-manager
-WORKDIR /home/m/.config/home-manager
+COPY --chown=$IMGUSER:$IMGGROUP . .config/home-manager
+WORKDIR $HOME/.config/home-manager
 RUN bash ./bin/hostconfig.sh --headless --distro=linux --arch=x86_64 > .hostconfig.nix
-RUN nix run home-manager/release-25.05 -- build
-RUN nix run home-manager/release-25.05 -- switch
-WORKDIR /home/m
+RUN nix run home-manager/release-25.05 -- switch --flake path:.
+WORKDIR $HOME
 RUN rm -rf .config/home-manager
 
 # Copy home directory to /tmp/m
-RUN mkdir /tmp/m
-RUN cp -aLr .config /tmp/m
-RUN cp -aLr .zsh /tmp/m
-RUN cp -aLr .zshenv /tmp/m
-RUN cp -aLr .zshrc /tmp/m
-RUN mkdir /tmp/m/.nix-profile
-RUN cp -aLr .nix-profile/etc /tmp/m/.nix-profile
+RUN mkdir $TMP
+RUN cp -aLr .config $TMP
+RUN cp -aLr .zshenv $TMP
+RUN cp -aLr .zshrc $TMP
+RUN mkdir $TMP/.nix-profile
+RUN cp -aLr .nix-profile/etc $TMP/.nix-profile
 
 # Copy needed /nix files to /tmp/store
 COPY --chmod=777 docker/mkstore.sh /tmp/mkstore.sh
-RUN /tmp/mkstore.sh /tmp/store
+RUN /tmp/mkstore.sh $STORE
 
 # Create a clean home directory and store
 FROM scratch
-COPY --from=home-manager /tmp/m /home/m
-COPY --from=home-manager /tmp/store /nix/store
+
+ENV IMGUSER=mikecurtis
+ENV HOME=/home/$IMGUSER
+ENV TMP=/tmp/nixtmp
+ENV STORE=/tmp/store
+
+COPY --from=home-manager $TMP $HOME
+COPY --from=home-manager $STORE /nix/store
