@@ -9,7 +9,7 @@
     # Get editor completions based on the config schema
     "$schema" = "https://starship.rs/config-schema.json";
 
-    format = "$character $username@$hostname:$directory $git_branch$git_commit$git_metrics$git_status";
+    format = "$character $username@$hostname:$directory $git_branch$git_commit$git_metrics$git_status# ";
 
     palette = "custom";
     palettes.custom = {
